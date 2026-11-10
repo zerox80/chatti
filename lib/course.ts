@@ -1,0 +1,11 @@
+import { z } from "zod";
+export const questionSchema = z.object({ question: z.string().max(2000), options: z.array(z.string().max(1000)).length(4), correct: z.number().int().min(0).max(3), explanation: z.string().max(4000) });
+export const lessonSchema = z.object({ id:z.string().max(100), title:z.string().min(1).max(300), goal:z.string().max(2000), content:z.string().max(150000), quiz:z.array(questionSchema).max(10), completed:z.boolean(), bookmarked:z.boolean(), note:z.string().max(30000), resumeFrom:z.string().max(300).optional(), resumeSavedAt:z.string().datetime().optional() });
+export const courseSchema = z.object({ id:z.string().max(100), title:z.string().min(1).max(300), description:z.string().max(5000), topic:z.string().max(1000), level:z.string().max(100), depth:z.enum(["gründlich","intensiv"]), language:z.enum(["Deutsch","English"]), demo:z.boolean(), created:z.string().max(100), modules:z.array(z.object({id:z.string().max(100),title:z.string().min(1).max(300),lessons:z.array(lessonSchema).min(1).max(12)})).min(1).max(16) });
+export const librarySchema = z.array(courseSchema).max(40);
+export type Question = z.infer<typeof questionSchema>;
+export type Lesson = z.infer<typeof lessonSchema>;
+export type Course = z.infer<typeof courseSchema>;
+export const lessonsOf = (c:Course) => c.modules.flatMap(m=>m.lessons);
+export const words = (s:string) => s.trim() ? s.trim().split(/\s+/).length : 0;
+export const progress = (c:Course) => Math.round(100*lessonsOf(c).filter(l=>l.completed).length/lessonsOf(c).length);
