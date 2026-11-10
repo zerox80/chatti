@@ -1,6 +1,8 @@
-# Kurse mit der eigenen Site-Erweiterung erstellen
+# Optionale eigene Kursaufträge
 
-Diese Aufträge kopierst du nach der Einrichtung **direkt in Codex**. Codex verwendet die verbundene Lesewerk-Erweiterung deiner eigenen Site. Die Website selbst erstellt keine Modellanfragen. Kein API-Schlüssel erforderlich; die Limits deines Chats gelten weiter.
+Im normalen Ablauf erstellt die Website den passenden Auftrag: Thema eingeben → **Kurs vorbereiten** → Angaben wählen → **Auftrag kopieren** → in Codex einfügen. Zum Weiter-Ausarbeiten gibt es beim Kurs ebenfalls einen Kopierbutton.
+
+Die folgenden Beispiele sind optional für eigene Anpassungen. Du brauchst sie nicht für den ersten Kurs. Solche eigenen Aufträge kopierst du nach der Einrichtung **direkt in Codex**. Codex verwendet die verbundene Lesewerk-Erweiterung deiner eigenen Site. Die Website selbst erstellt keine Modellanfragen. Kein API-Schlüssel erforderlich; die Limits deines Chats gelten weiter.
 
 ## Neues Thema
 

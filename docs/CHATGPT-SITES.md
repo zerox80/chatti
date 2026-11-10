@@ -52,7 +52,7 @@ Vor dem ersten Schreibvorgang mit `list_courses` prüfen. Die zurückgegebenen K
 
 ## 5. Lernen und Inhalte erstellen
 
-Öffne die veröffentlichte Site und melde dich mit demselben Konto an, mit dem du ihre Erweiterung verwendest. Füge den [Kursauftrag](KURSE-ERSTELLEN.md) direkt in Codex ein. Codex schreibt die Texte, die Werkzeuge speichern sie. Anschließend auf der Site **Synchronisieren** klicken.
+Öffne die veröffentlichte Site und melde dich mit demselben Konto an, mit dem du ihre Erweiterung verwendest. Gib auf der Website dein Thema ein und wähle **Kurs vorbereiten**. Stelle Niveau, Sprache, Tiefe und Lernziel ein. Mit **Auftrag kopieren** erzeugst du den passenden Auftrag aus deinen Angaben und fügst ihn in Codex ein. Codex schreibt die Texte, die Werkzeuge speichern sie. Anschließend auf der Site **Synchronisieren** klicken.
 
 Das Konto braucht Zugriff auf die eigene Site und die Erweiterung. Ein zweites Konto erhält nicht automatisch deine Bibliothek. Eine neue Site bekommt eigene IDs und neuen Speicher. Für einen Umzug zuerst JSON-Sicherung exportieren und in der neuen Site importieren. Kurs- und Lektions-IDs können sich beim Import ändern; alte Direktlinks gelten dann nicht für die neue Site.
 
