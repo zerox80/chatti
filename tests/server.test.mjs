@@ -52,8 +52,8 @@ const library = await import(moduleUrl("../app/api/library/route.ts"));
 const mcp = await import(moduleUrl("../app/mcp/route.ts"));
 const {demoCourse} = await import(moduleUrl("../lib/demo.ts"));
 function reset() {context.user={userId:"alice",email:"alice@example.test"};context.env.DB=new TestD1();}
-const put = (courses, revision, origin="https://reader.example.test") => library.PUT(new Request("https://reader.example.test/api/library", {
-  method:"PUT",headers:{"Content-Type":"application/json",origin},body:JSON.stringify({courses,revision}),
+const put = (courses, revision, origin="https://reader.example.test", base=[]) => library.PUT(new Request("https://reader.example.test/api/library", {
+  method:"PUT",headers:{"Content-Type":"application/json",origin},body:JSON.stringify({courses,revision,base}),
 }));
 const tool = async (name, args={}) => (await mcp.POST(new Request("https://reader.example.test/mcp", {
   method:"POST",body:JSON.stringify({jsonrpc:"2.0",id:1,method:"tools/call",params:{name,arguments:args}}),
@@ -77,12 +77,12 @@ test("each authenticated Site user has an isolated library", async () => {
   assert.equal(state.courses.length,1);assert.equal(state.revision,1);
 });
 
-test("stale saves and cross-origin requests cannot overwrite current data", async () => {
-  reset();await put([demoCourse()],0);
-  assert.equal((await put([],0)).status,409);
+test("stale saves merge against current data and cross-origin requests are rejected", async () => {
+  reset();await put([demoCourse()],0,undefined,[]);
+  assert.equal((await put([],0)).status,200);
   assert.equal((await put([],1,"https://foreign.example.test")).status,403);
   const state=await (await library.GET()).json();
-  assert.equal(state.courses.length,1);assert.equal(state.revision,1);
+  assert.equal(state.courses.length,1);assert.equal(state.revision,2);
 });
 
 test("MCP writes retain notes, reading place, bookmark and progress", async () => {

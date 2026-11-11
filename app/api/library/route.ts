@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { getChatGPTUser } from "../../chatgpt-auth";
 import { librarySchema } from "../../../lib/course";
 import { cleanCourseCitations } from "../../../lib/citations";
+import { mergeLibrary } from "../../../lib/library-merge";
 export async function GET() {
   const user=await getChatGPTUser();
   if(!user) return Response.json({error:"Bitte melde dich an."},{status:401});
@@ -17,11 +18,20 @@ export async function PUT(request:Request) {
   const text=await request.text();
   if(new TextEncoder().encode(text).length>1800000) return Response.json({error:"Die Bibliothek erreicht die Speichergrenze dieser ersten Version. Bitte Kurse exportieren und ältere Kurse entfernen."},{status:413});
   let input; try{input=JSON.parse(text)}catch{return Response.json({error:"Ungültige Daten."},{status:400})}
-  const result=librarySchema.safeParse(input.courses);
-  if(!result.success || !Number.isSafeInteger(input.revision) || input.revision<0) return Response.json({error:"Kursdaten sind ungültig."},{status:400});
-  const payload=JSON.stringify(result.data.map(cleanCourseCitations));
+  const result=librarySchema.safeParse(input.courses),base=input.base===undefined?null:librarySchema.safeParse(input.base);
+  if(!result.success || base?.success===false || !Number.isSafeInteger(input.revision) || input.revision<0) return Response.json({error:"Kursdaten sind ungültig."},{status:400});
   await env.DB.prepare("INSERT OR IGNORE INTO libraries (user_id, payload, revision) VALUES (?, '[]', 0)").bind(user.userId).run();
-  const updated=await env.DB.prepare("UPDATE libraries SET payload = ?, revision = revision + 1 WHERE user_id = ? AND revision = ?").bind(payload,user.userId,input.revision).run();
-  if(!updated.meta.changes) return Response.json({error:"Die Bibliothek wurde in einer anderen Sitzung geändert. Exportiere deine Änderungen und lade die Seite neu."},{status:409});
-  return Response.json({revision:input.revision+1});
+  for(let attempt=0;attempt<5;attempt++){
+    const row=await env.DB.prepare("SELECT payload, revision FROM libraries WHERE user_id = ?").bind(user.userId).first<{payload:string;revision:number}>();
+    if(!row)return Response.json({error:"Bibliothek konnte nicht geladen werden."},{status:503});
+    const current=librarySchema.parse(JSON.parse(row.payload));
+    if(row.revision!==input.revision&&!base)return Response.json({error:"Die Bibliothek wurde in einer anderen Sitzung geändert. Synchronisiere die neueste Version und versuche es noch einmal.",courses:current,revision:row.revision},{status:409});
+    const courses=row.revision===input.revision?result.data:mergeLibrary(base!.data,result.data,current);
+    const normalized=courses.map(cleanCourseCitations);
+    const payload=JSON.stringify(normalized);
+    const updated=await env.DB.prepare("UPDATE libraries SET payload = ?, revision = revision + 1 WHERE user_id = ? AND revision = ?").bind(payload,user.userId,row.revision).run();
+    if(updated.meta.changes)return Response.json({revision:row.revision+1,courses:normalized});
+  }
+  const row=await env.DB.prepare("SELECT payload, revision FROM libraries WHERE user_id = ?").bind(user.userId).first<{payload:string;revision:number}>();
+  return Response.json({error:"Die Bibliothek wird gerade sehr häufig geändert. Synchronisiere bitte noch einmal.",courses:row?librarySchema.parse(JSON.parse(row.payload)):[],revision:row?.revision??0},{status:409});
 }
