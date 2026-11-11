@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./mobile.css";
+import "./markdown.css";
 
 export const metadata: Metadata = {
   title: "Lesewerk – Dein Wissen. Dein Kurs.",

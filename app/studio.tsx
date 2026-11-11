@@ -1,9 +1,10 @@
 "use client";
-import {useState,useEffect,useRef,useCallback,type ReactNode} from "react";
+import {useState,useEffect,useRef,useCallback} from "react";
 import {BookOpen,Home,Library,Bookmark,Settings,Plus,ArrowRight,ArrowUpRight,ArrowLeft,ChevronRight,ChevronDown,FileText,Layers3,Check,CircleCheck,Copy,Download,Upload,Search,RefreshCw,MessageSquare,Sparkles,X,Menu,Pencil,Trash2,Clock3,Loader2} from "lucide-react";
 import {Course,Lesson,lessonsOf,librarySchema,progress,words} from "../lib/course";
 import {demoCourse} from "../lib/demo";
 import {sourceStyle} from "../lib/citations";
+import {Markdown} from "../components/markdown";
 import {ReadingPlace} from "../components/reading-place";
 import {findReadingPlace} from "../lib/reading-place";
 import {beginnerWriting,lessonLength,writingGuide} from "../lib/teaching";
@@ -11,8 +12,6 @@ import {type View} from "../lib/navigation";
 import {useBrowserNavigation} from "../hooks/use-browser-navigation";
 const uid=()=>crypto.randomUUID();
 function download(name:string,text:string){const u=URL.createObjectURL(new Blob([text],{type:name.endsWith("json")?"application/json":"text/markdown;charset=utf-8"}));const a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
-function inline(s:string):ReactNode[]{return s.split(/(`[^`]+`|\*\*[^*]+\*\*|\[[^\]\n]+\]\(https?:\/\/[^\s)]+\))/g).map((p,i)=>{if(p.startsWith("`"))return <code key={i}>{p.slice(1,-1)}</code>;if(p.startsWith("**"))return <strong key={i}>{inline(p.slice(2,-2))}</strong>;const link=p.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);return link?<a key={i} href={link[2]} target="_blank" rel="noreferrer">{link[1]}</a>:p})}
-function Markdown({text}:{text:string}){return <div className="prose">{text.split(/(```[\s\S]*?```)/g).map((p,i)=>{if(p.startsWith("```")){const n=p.indexOf("\n");return <div key={i} className="codeblock"><div>{p.slice(3,n)||"Code"}</div><pre><code>{p.slice(n+1,-3).trimEnd()}</code></pre></div>}return p.split(/\n\s*\n/).map((b,j)=>{const t=b.trim(),k=i+"-"+j;if(!t)return null;if(/^#{1,4} /.test(t)){const m=t.match(/^(#{1,4}) (.*)/)!;return m[1].length<=2?<h2 key={k}>{inline(m[2])}</h2>:<h3 key={k}>{inline(m[2])}</h3>}const lines=t.split("\n");if(lines.every(l=>/^[-*] /.test(l)))return <ul key={k}>{lines.map((l,n)=><li key={n}>{inline(l.slice(2))}</li>)}</ul>;if(lines.every(l=>/^\d+\. /.test(l)))return <ol key={k}>{lines.map((l,n)=><li key={n}>{inline(l.replace(/^\d+\. /,""))}</li>)}</ol>;return <p key={k}>{inline(lines.join(" "))}</p>})})}</div>}
 export default function App(){
  const [courses,setCourses]=useState<Course[]>([]);
  const [loaded,setLoaded]=useState(false),[saved,setSaved]=useState("Wird geladen …"),[error,setError]=useState(""),[toast,setToast]=useState(""),[modal,setModal]=useState<"create"|"import"|null>(null);

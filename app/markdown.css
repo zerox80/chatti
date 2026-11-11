@@ -1,0 +1,26 @@
+/* Preserve program layout independently of prose and mobile styles. */
+.prose .lesson-codeblock{min-width:0;max-width:100%;border:1px solid #374e45;border-radius:10px;background:#192b25;color:#e1eee6;overflow:hidden;margin:26px 0}
+.prose .lesson-codeblock .codeblock-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 16px;border-bottom:1px solid #364b41;background:#22382e;font:12px/1.4 Arial,sans-serif;letter-spacing:0;color:#c4d7cb}
+.codeblock-header>span{min-width:0;overflow-wrap:anywhere}
+.codeblock-header button{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;min-height:36px;padding:6px 10px;border:1px solid #536e5d;border-radius:6px;font:12px/1.4 Arial,sans-serif;color:#e1eee6}
+.codeblock-header button:hover{background:#304d3c}
+.prose .lesson-codeblock pre{display:block;max-width:100%;margin:0;padding:20px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;white-space:pre;word-break:normal;overflow-wrap:normal;tab-size:4;font:14px/1.7 Consolas,"Cascadia Code","SFMono-Regular",Menlo,monospace;letter-spacing:0;text-align:left}
+.prose .lesson-codeblock pre code{display:block;min-width:max-content;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:inherit;font:inherit;white-space:inherit;word-break:normal;overflow-wrap:normal;tab-size:inherit}
+.prose .lesson-codeblock pre:focus-visible{outline:2px solid #b7c958;outline-offset:-3px}
+.prose :not(pre)>code{font-family:Consolas,"Cascadia Code","SFMono-Regular",Menlo,monospace;white-space:break-spaces;overflow-wrap:anywhere}
+.lesson-codeblock .hljs-comment,.lesson-codeblock .hljs-quote{color:#a3b9ac;font-style:italic}
+.lesson-codeblock .hljs-keyword,.lesson-codeblock .hljs-selector-tag,.lesson-codeblock .hljs-literal{color:#d4b9f5}
+.lesson-codeblock .hljs-string,.lesson-codeblock .hljs-regexp,.lesson-codeblock .hljs-addition{color:#bce2a0}
+.lesson-codeblock .hljs-number,.lesson-codeblock .hljs-symbol,.lesson-codeblock .hljs-bullet{color:#f0ca93}
+.lesson-codeblock .hljs-title,.lesson-codeblock .hljs-section,.lesson-codeblock .hljs-selector-class,.lesson-codeblock .hljs-built_in{color:#a0d8e9}
+.lesson-codeblock .hljs-meta,.lesson-codeblock .hljs-attr,.lesson-codeblock .hljs-attribute,.lesson-codeblock .hljs-type{color:#f3dca6}
+.lesson-codeblock .hljs-variable,.lesson-codeblock .hljs-template-variable,.lesson-codeblock .hljs-params{color:#d7e6ed}
+.lesson-codeblock .hljs-deletion,.lesson-codeblock .hljs-name{color:#f0b4ac}
+.prose blockquote{margin:24px 0;padding:6px 20px;border-left:3px solid #8da37e;color:#5d705f}
+.prose strong{font-weight:700}.prose em{font-style:italic}
+.prose ul{list-style:disc}.prose ol{list-style:decimal}.prose ul ul{list-style:circle}
+.prose .markdown-table{max-width:100%;overflow-x:auto;margin:24px 0}
+.prose table{width:100%;border-collapse:collapse;font-size:.9em;line-height:1.6;text-align:left}
+.prose th,.prose td{padding:11px 14px;border:1px solid var(--line);vertical-align:top}
+.prose th{background:#edf2e7;font-weight:600}
+@media(max-width:650px){.prose .lesson-codeblock{margin:24px 0}.prose .lesson-codeblock pre{padding:16px;font-size:14px;line-height:1.7}.prose .lesson-codeblock .codeblock-header{padding:7px 12px}.codeblock-header button{min-height:40px}}
